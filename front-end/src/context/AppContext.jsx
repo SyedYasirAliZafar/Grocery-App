@@ -14,84 +14,80 @@ const AppContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState({})
 
   // fetch all products data
-
-  const fetchProducts = async ()=>{
+  const fetchProducts = async () => {
     setProducts(dummyProducts)
   }
 
-  // product add to cart
+  // ADD TO CART
+  const addToCart = (itemId) => {
+    let cartData = { ...cartItems };
 
-  const addToCart = (itemId) =>{
-    let cartData = structuredClone(cartItems)
-    if(cartData[itemId]){
-      cartData[itemId] += 1
+    if (cartData[itemId]) {
+      cartData[itemId] += 1;
+    } else {
+      cartData[itemId] = 1;
     }
-    else{
-      cartData[itemId] = 1
-    }
-    setCartItems(cartData)
-    toast.success("Added to Cart")
-  }
 
-  // Update cart items quantity
+    setCartItems(cartData);
+    toast.success("Added to Cart");
+  };
 
-  const updateCartItem = (itemId, quantity) =>{
-    let cartData = structuredClone(cartItems)
-    cartData[itemId] = quantity
-    setCartItems(cartData)
-    toast.success("Cart Updated")
-  }
+  // UPDATE CART ITEM
+  const updateCartItem = (itemId, quantity) => {
+    let cartData = { ...cartItems };
+    cartData[itemId] = quantity;
+    setCartItems(cartData);
+    toast.success("Cart Updated");
+  };
 
-
-  // Total cart items
-
+  // TOTAL CART ITEMS
   const cartCount = () => {
-    let totalCount = 0
-    for(const item in cartItems){
-      totalCount += cartItems[item]
+    let total = 0;
+    for (const item in cartItems) {
+      total += cartItems[item];
     }
-      return totalCount
-  }
+    return total;
+  };
 
-  // total cart Ammount
-
+  // TOTAL CART AMOUNT
   const totalCartAmount = () => {
-    let totalAmount = 0
-    for(const items in cartItems){
-      let itemInfo  = products.find((product)=>product._id===items)
-      if(cartItems[items]>0){
-        totalAmount+= cartItems[items]*itemInfo.offerPrice
+    let totalAmount = 0;
+
+    for (const itemId in cartItems) {
+      const itemInfo = products.find((p) => p._id === itemId);
+      if (itemInfo) {
+        totalAmount += cartItems[itemId] * itemInfo.offerPrice;
       }
     }
-    return Math.floor(totalAmount * 1000) / 100
-  }
 
-  // remove from cart
+    return Math.floor(totalAmount * 1000) / 100;
+  };
 
-  const removeFromCart = () => {
-    let cartData = structuredClone(cartItems)
-    if(cartData[itemId]){
-      cartData[itemId -= 1]
-      if(cartData[itemId]===0){
-        delete cartData[itemId]
-      }
-      toast.success("Item Removed Successfully")
-      setCartItems(cartData)
+  // Remove from cart
+  const removeFromCart = (itemId) => {
+    let cartData = { ...cartItems };
+
+    if (!cartData[itemId]) return; // item not in cart
+
+    cartData[itemId] -= 1;
+
+    if (cartData[itemId] <= 0) {
+      delete cartData[itemId]; // remove item if quantity becomes 0
     }
-  }
 
-  useEffect(()=>{
-    fetchProducts()
-  },[])
+    setCartItems(cartData);
+    toast.success("Item removed from cart");
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const value = {
     navigate,
-    user,
-    setUser,
-    isSeller,
-    setIsSeller,
-    showUserLogin,
-    setShowUserLogin,
+    user, setUser,
+    isSeller, setIsSeller,
+    showUserLogin, setShowUserLogin,
     products,
     addToCart,
     updateCartItem,
@@ -99,7 +95,6 @@ const AppContextProvider = ({ children }) => {
     totalCartAmount,
     removeFromCart,
     cartItems,
-
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
@@ -107,5 +102,4 @@ const AppContextProvider = ({ children }) => {
 
 export default AppContextProvider;
 
-// ✅ Add this named export
 export const useAppContext = () => useContext(AppContext);
