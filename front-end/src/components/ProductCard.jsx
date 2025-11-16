@@ -3,7 +3,7 @@ import { useAppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 
 const ProductCard = ({ product }) => {
-  const { navigate } = useAppContext()
+  const { navigate, addToCart, cartItems, removeFromCart } = useAppContext()
   const [count, setCount] = useState(0)
 
   return product && (
@@ -56,12 +56,12 @@ const ProductCard = ({ product }) => {
           {/* Add / Counter */}
           <div className="text-indigo-500">
 
-            {count === 0 ? (
+            {!cartItems[product._id] ? (
               // ADD BUTTON
               <button
                 onClick={(e) => {
                   e.stopPropagation()
-                  setCount(1)
+                  addToCart(product._id)
                 }}
                 className="flex items-center justify-center gap-1 bg-indigo-100 border border-indigo-300 md:w-[80px] w-[64px] h-[34px] rounded text-indigo-600 font-medium"
               >
@@ -84,7 +84,7 @@ const ProductCard = ({ product }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
-                    setCount((prev) => Math.max(prev - 1, 0))
+                    removeFromCart(product._id)
                   }}
                   className="cursor-pointer text-md px-2 h-full"
                 >

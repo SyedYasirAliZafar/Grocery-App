@@ -10,6 +10,7 @@ import MyOrder from './pages/MyOrder'
 import Auth from './models/Auth'
 import ProductCategory from './pages/ProductCategory'
 import Footer from './components/Footer'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
   const { isSeller, showUserLogin } = useContext(AppContext)
@@ -24,6 +25,7 @@ function App() {
       {!isSellerPath && <Navbar />}
 
       {showUserLogin && <Auth />}
+      <Toaster/>
 
       <div className='px-6 md:px-16 lg:px-24 xl:px-32'>
         <Routes>
