@@ -1,23 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import { useState, createContext, useContext, useEffect } from "react";
 import { dummyProducts } from "../assets/assets";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
+
   const [user, setUser] = useState(null);
   const [isSeller, setIsSeller] = useState(null);
   const [showUserLogin, setShowUserLogin] = useState(false);
-  const [products, setProducts] = useState([])
-  const [cartItems, setCartItems] = useState({})
-  const [searchQuery, setSearchQuery] = useState({})
+  const [products, setProducts] = useState([]);
 
-  // fetch all products data
+  // ✅ Cart saved in LocalStorage
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem("cartItems");
+    return savedCart ? JSON.parse(savedCart) : {};
+  });
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Fetch all products
   const fetchProducts = async () => {
-    setProducts(dummyProducts)
-  }
+    setProducts(dummyProducts);
+  };
 
   // ADD TO CART
   const addToCart = (itemId) => {
@@ -33,7 +40,7 @@ const AppContextProvider = ({ children }) => {
     toast.success("Added to Cart");
   };
 
-  // UPDATE CART ITEM
+  // UPDATE ITEM QUANTITY IN CART
   const updateCartItem = (itemId, quantity) => {
     let cartData = { ...cartItems };
     cartData[itemId] = quantity;
@@ -41,7 +48,23 @@ const AppContextProvider = ({ children }) => {
     toast.success("Cart Updated");
   };
 
-  // TOTAL CART ITEMS
+  // REMOVE FROM CART (1 quantity each time)
+  const removeFromCart = (itemId) => {
+    let cartData = { ...cartItems };
+
+    if (!cartData[itemId]) return;
+
+    cartData[itemId] -= 1;
+
+    if (cartData[itemId] <= 0) {
+      delete cartData[itemId];
+    }
+
+    setCartItems(cartData);
+    toast.success("Removed from Cart");
+  };
+
+  // TOTAL ITEMS IN CART
   const cartCount = () => {
     let total = 0;
     for (const item in cartItems) {
@@ -50,35 +73,27 @@ const AppContextProvider = ({ children }) => {
     return total;
   };
 
-  // TOTAL CART AMOUNT
+  // TOTAL CART PRICE
   const totalCartAmount = () => {
     let totalAmount = 0;
 
     for (const itemId in cartItems) {
-      const itemInfo = products.find((p) => p._id === itemId);
+      const itemInfo = products.find(
+        (p) => String(p._id) === String(itemId)
+      );
+
       if (itemInfo) {
         totalAmount += cartItems[itemId] * itemInfo.offerPrice;
       }
     }
 
-    return Math.floor(totalAmount * 1000) / 100;
+    return totalAmount.toFixed(2);
   };
 
-  // Remove from cart
-  const removeFromCart = (itemId) => {
-    let cartData = { ...cartItems };
-
-    if (!cartData[itemId]) return; // item not in cart
-
-    cartData[itemId] -= 1;
-
-    if (cartData[itemId] <= 0) {
-      delete cartData[itemId]; // remove item if quantity becomes 0
-    }
-
-    setCartItems(cartData);
-    toast.success("Item removed from cart");
-  };
+  // 🟢 SAVE CART TO LOCALSTORAGE ON EVERY CHANGE
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   useEffect(() => {
     fetchProducts();
@@ -86,9 +101,12 @@ const AppContextProvider = ({ children }) => {
 
   const value = {
     navigate,
-    user, setUser,
-    isSeller, setIsSeller,
-    showUserLogin, setShowUserLogin,
+    user,
+    setUser,
+    isSeller,
+    setIsSeller,
+    showUserLogin,
+    setShowUserLogin,
     products,
     addToCart,
     updateCartItem,
@@ -100,7 +118,9 @@ const AppContextProvider = ({ children }) => {
     setSearchQuery,
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>{children}</AppContext.Provider>
+  );
 };
 
 export default AppContextProvider;
