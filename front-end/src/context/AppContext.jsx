@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, createContext, useContext, useEffect } from "react";
 import { dummyProducts } from "../assets/assets";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 export const AppContext = createContext();
 
@@ -116,6 +117,7 @@ const AppContextProvider = ({ children }) => {
     cartItems,
     searchQuery,
     setSearchQuery,
+    axios,
   };
 
   return (
