@@ -22,7 +22,7 @@ const SellerLayout = () => {
             </h1>
                 <div className="flex items-center gap-5 text-gray-500">
                     <p>Hi! Admin</p>
-                    <button onClick={()=>{setIsSeller(false); navigate('/') }} className='border rounded-full text-sm px-4 py-1'>Logout</button>
+                    <button onClick={()=>{setIsSeller(false); navigate('/seller') }} className='border rounded-full text-sm px-4 py-1 cursor-pointer text-white bg-orange-600'>Logout</button>
                 </div>
             </div>
             <div className="flex">

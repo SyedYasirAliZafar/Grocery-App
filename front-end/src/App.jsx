@@ -16,6 +16,8 @@ import SellerLayout from './pages/seller/SellerLayout'
 import SellerLogin from './components/seller/SellerLogin'
 import AddProduct from './pages/seller/AddProduct'
 import ProductList from './pages/seller/ProductList'
+import Orders from './pages/seller/Orders'
+
 
 function App() {
   const { isSeller, showUserLogin } = useContext(AppContext)
