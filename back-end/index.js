@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { connectDB } from './config/connectDB.js'
+import userRoutes from './routes/user.routes.js'
 
 dotenv.config()
 
@@ -26,6 +27,9 @@ app.use(cookieParser())
 app.get('/', (req, res) => {
   res.send('Grocery App Backend!')
 })
+
+// User Route
+app.use("/api/user", userRoutes)
 
 // PORT
 const PORT = process.env.PORT || 5000

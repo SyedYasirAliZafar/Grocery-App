@@ -1,0 +1,68 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Cache files
+.cache/
+.temp/
+tmp/
+temp/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Debug files
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage reports
+coverage/
+
+# Optional npm cache directory
+.npm/
+
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# MongoDB dump
+dump/
+
+# Uploads (if storing locally)
+uploads/
+public/uploads/
+
+# Sentry / crash dumps
+*.map
+
+# PM2 logs
+pids/
+logs/
+*.gz
