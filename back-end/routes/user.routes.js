@@ -13,7 +13,7 @@ router.post("/login", loginUser)
 // User Logout Route
 router.get("/logout", isLoggedIn, logoutUser)
 
-// isAuth
+// isAuthUser
 router.get("/is-auth", isLoggedIn, isAuthUser)
 
 export default router

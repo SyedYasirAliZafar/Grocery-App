@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { connectDB } from './config/connectDB.js'
 import userRoutes from './routes/user.routes.js'
+import sellerRoutes from './routes/seller.routes.js'
 
 dotenv.config()
 
@@ -30,6 +31,9 @@ app.get('/', (req, res) => {
 
 // User Route
 app.use("/api/user", userRoutes)
+
+// Seller Routes
+app.use("/api/seller", sellerRoutes)
 
 // PORT
 const PORT = process.env.PORT || 5000
