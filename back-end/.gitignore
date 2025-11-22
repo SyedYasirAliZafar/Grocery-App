@@ -1,68 +1,36 @@
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
 # Logs
-logs
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Environment variables
-.env
-.env.local
-.env.production
-.env.development
-
-# Node modules
-node_modules/
-
-# Build output
+# Build directories
 dist/
 build/
-.next/
-out/
-
-# Cache files
 .cache/
 .temp/
-tmp/
-temp/
 
-# OS generated files
-.DS_Store
-Thumbs.db
-
-# Editor folders
-.vscode/
-.idea/
-
-# Debug files
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage reports
-coverage/
-
-# Optional npm cache directory
-.npm/
-
-# Binaries
-*.exe
-*.dll
-*.so
-*.dylib
-
-# MongoDB dump
-dump/
-
-# Uploads (if storing locally)
+# Uploaded files
 uploads/
 public/uploads/
 
-# Sentry / crash dumps
-*.map
+# Test coverage
+coverage/
 
-# PM2 logs
-pids/
-logs/
-*.gz
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

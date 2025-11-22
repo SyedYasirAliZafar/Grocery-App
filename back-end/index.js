@@ -3,8 +3,10 @@ import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { connectDB } from './config/connectDB.js'
+import { connectCloudinary } from './config/cloudinary.js'
 import userRoutes from './routes/user.routes.js'
 import sellerRoutes from './routes/seller.routes.js'
+import productRoutes from './routes/product.routes.js'
 
 dotenv.config()
 
@@ -12,6 +14,9 @@ const app = express()
 
 // MongoDB Connected
 connectDB()
+
+// Cloudinary Connected
+connectCloudinary()
 
 // Allowed Frontend Origins
 const allowedOrigins = ["http://localhost:5173"]
@@ -34,6 +39,9 @@ app.use("/api/user", userRoutes)
 
 // Seller Routes
 app.use("/api/seller", sellerRoutes)
+
+// Product Routes
+app.use("/api/product", productRoutes)
 
 // PORT
 const PORT = process.env.PORT || 5000
