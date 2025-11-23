@@ -6,11 +6,10 @@ import { addProduct, changeStock, getProducts, getProductsById } from '../contro
 const router = express.Router()
 
 // add Product Route
-router.post('/add-product', upload.array('images'),authSeller, addProduct)
+router.post('/add-product', authSeller, upload.array('image',4), addProduct)
 
 router.get('/list', getProducts)
-router.get('/id', getProducts)
-router.get('/id', getProductsById)
-router.get('/stock', authSeller, changeStock)
+router.get('/:id', getProductsById)
+router.put('/stock', authSeller, changeStock)
 
 export default router

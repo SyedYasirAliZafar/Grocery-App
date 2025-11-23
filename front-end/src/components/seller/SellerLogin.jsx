@@ -3,33 +3,38 @@ import toast from "react-hot-toast";
 import { useAppContext } from "../../context/AppContext";
 
 const SellerLogin = () => {
-  const { isSeller, setIsSeller, navigate } = useAppContext();
+  const { isSeller, setIsSeller, navigate, axios } = useAppContext();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Already logged in → Go to dashboard
   useEffect(() => {
     if (isSeller) {
       navigate("/seller");
     }
   }, [isSeller]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
 
-    // 👉 FRONTEND ONLY LOGIN (No backend)
-    if (email.trim() === "" || password.trim() === "") {
-      toast.error("Enter email & password");
-      return;
+      const { data } = await axios.post(
+        "/api/seller/login",
+        { email, password },
+        { withCredentials: true } // important for cookie
+      );
+
+      if (data.success) {
+        setIsSeller(true);
+        navigate("/seller");
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong!");
     }
-
-    toast.success("Login Successful");
-    setIsSeller(true);       // mark seller logged in
-    navigate("/seller");     // go to seller layout
   };
-
-  if (isSeller) return null;
 
   return (
     <div className="fixed top-0 left-0 bottom-0 right-0 z-30 flex items-center justify-center bg-black/50 text-gray-600">

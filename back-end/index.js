@@ -32,10 +32,8 @@ app.use(cors({
 }))
 app.use(cookieParser())
 
-// Test Route
-app.get('/', (req, res) => {
-  res.send('Grocery App Backend!')
-})
+// Images Route
+app.use('/images', express.static("uploads"))
 
 // User Route
 app.use("/api/user", userRoutes)

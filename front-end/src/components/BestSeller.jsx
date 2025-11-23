@@ -4,7 +4,7 @@ import ProductCard from './ProductCard'
 
 const BestSeller = () => {
 
-  const { products } = useAppContext()   // ✅ Correct way to access context
+  const { products } = useAppContext() // ✅ Correct way to access context
 
   return (
     <div className='mt-16'>
