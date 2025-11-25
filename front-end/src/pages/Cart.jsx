@@ -75,13 +75,17 @@ const Cart = () => {
       }
 
       if (paymentOption === "COD") {
-        const { data } = await axios.post("/api/order/cod", {
-          items: cartArray.map((item) => ({
-            product: item._id,
-            quantity: item.quantity,
-          })),
-          address: selectedAddress._id,
-        });
+        const { data } = await axios.post(
+          "/api/order/cod",
+          {
+            items: cartArray.map((item) => ({
+              product: item._id,
+              quantity: item.quantity,
+            })),
+            address: selectedAddress._id,
+          },
+          { withCredentials: true } // ← essential!
+        );
 
         if (data.success) {
           toast.success(data.message);
@@ -107,9 +111,7 @@ const Cart = () => {
       <div className="flex-1 max-w-4xl">
         <h1 className="text-3xl font-medium mb-6">
           Shopping Cart{" "}
-          <span className="text-sm text-indigo-500">
-            {cartCount()} Items
-          </span>
+          <span className="text-sm text-indigo-500">{cartCount()} Items</span>
         </h1>
 
         <div className="grid grid-cols-[2fr_1fr_1fr] text-gray-500 text-base font-medium pb-3">
@@ -163,9 +165,7 @@ const Cart = () => {
               </div>
             </div>
 
-            <p className="text-center">
-              ${item.offerPrice * item.quantity}
-            </p>
+            <p className="text-center">${item.offerPrice * item.quantity}</p>
 
             <button
               onClick={() => removeFromCart(item._id)}
@@ -230,8 +230,7 @@ const Cart = () => {
                   }}
                   className="text-gray-500 p-2 hover:bg-gray-100 cursor-pointer"
                 >
-                  {addr.street}, {addr.city}, {addr.state},{" "}
-                  {addr.country}
+                  {addr.street}, {addr.city}, {addr.state}, {addr.country}
                 </p>
               ))}
 
@@ -275,7 +274,6 @@ const Cart = () => {
           <p className="flex justify-between text-lg font-medium mt-3">
             <span>Total Amount:</span>
             <span>${(totalCartAmount() * 1.02).toFixed(2)}</span>
-
           </p>
         </div>
 
@@ -283,9 +281,7 @@ const Cart = () => {
           onClick={placeOrder}
           className="w-full py-3 mt-6 cursor-pointer bg-indigo-500 text-white font-medium hover:bg-indigo-600 transition"
         >
-          {paymentOption === "COD"
-            ? "Place Order"
-            : "Proceed to Checkout"}
+          {paymentOption === "COD" ? "Place Order" : "Proceed to Checkout"}
         </button>
       </div>
     </div>

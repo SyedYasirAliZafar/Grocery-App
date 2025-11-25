@@ -5,21 +5,26 @@ import {Product} from '../models/product.model.js'
 
 export const placeOrderCOD = async (req, res) => {
     try {
-        const userId = req.user
-        const{items, address} = req.body
+        const userId = req.user.id;  // fixed
 
-        if(!items || !address){
-            return res
-            .status(400)
-            .json({message: "Items and Address are required", success: false})
+        const { items, address } = req.body;
+        if (!items || !address) {
+            return res.status(400).json({ message: "Items and Address are required", success: false });
         }
-        let amount = await items.reduce(async (acc, item)=>{
-            const product = Product.findById(item.product)
-            return (await acc) + product.offerPrice * item.quantity
-        }, 0)
 
-        // add tax charge 2%
-        amount += Math.floor((amount * 2)/100)
+        // calculate total amount
+        let amount = 0;
+        for (const item of items) {
+            const product = await Product.findById(item.product);
+            if (!product) {
+                return res.status(404).json({ message: `Product not found: ${item.product}`, success: false });
+            }
+            amount += product.offerPrice * item.quantity;
+        }
+
+        // add 2% tax
+        amount += Math.floor((amount * 2) / 100);
+
         await Order.create({
             userId,
             items,
@@ -27,17 +32,19 @@ export const placeOrderCOD = async (req, res) => {
             amount,
             paymentType: "COD",
             isPaid: false,
-        })
+        });
+
         res.status(201).json({
             message: "Order Placed Successfully",
             success: true,
-        })
+        });
 
     } catch (error) {
-        console.error("Error placing order:" ,error);
-        res.status(500).json({message: "Internal Server Error"})
+        console.error("Error placing order:", error);
+        res.status(500).json({ message: error.message, stack: error.stack });
     }
-}
+};
+
 
 // order details for individual user :/api/order/user
 

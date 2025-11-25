@@ -11,7 +11,11 @@ export const AppContext = createContext();
 const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const [isSeller, setIsSeller] = useState(null);
   const [showUserLogin, setShowUserLogin] = useState(false);
   const [products, setProducts] = useState([]);
@@ -33,6 +37,15 @@ const AppContextProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
+
+  // User to LocalStorage
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
+    }
+  }, [user]);
 
   // ---------------------------
   // FETCH USER & MERGE CART
@@ -96,7 +109,10 @@ const AppContextProvider = ({ children }) => {
 
   // ADD TO CART
   const addToCart = async (itemId) => {
-    const updatedCart = { ...cartItems, [itemId]: (cartItems[itemId] || 0) + 1 };
+    const updatedCart = {
+      ...cartItems,
+      [itemId]: (cartItems[itemId] || 0) + 1,
+    };
     setCartItems(updatedCart);
     toast.success("Added to cart");
     await syncCartToBackend(updatedCart);
@@ -128,9 +144,7 @@ const AppContextProvider = ({ children }) => {
   const totalCartAmount = () => {
     let total = 0;
     for (const itemId in cartItems) {
-      const itemInfo = products.find(
-        (p) => String(p._id) === String(itemId)
-      );
+      const itemInfo = products.find((p) => String(p._id) === String(itemId));
       if (itemInfo) total += cartItems[itemId] * itemInfo.offerPrice;
     }
     return total.toFixed(2);
@@ -166,9 +180,7 @@ const AppContextProvider = ({ children }) => {
     fetchSeller,
   };
 
-  return (
-    <AppContext.Provider value={value}>{children}</AppContext.Provider>
-  );
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
 export default AppContextProvider;
