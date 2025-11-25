@@ -1,37 +1,41 @@
-import React from 'react'
-import { useAppContext } from '../context/AppContext'
-import { assets } from '../assets/assets'
+import React from "react";
+import { useAppContext } from "../context/AppContext";
+import { assets } from "../assets/assets";
 
 const ProductCard = ({ product }) => {
-  const { navigate, addToCart, cartItems, removeFromCart } = useAppContext()
+  const { navigate, addToCart, cartItems, removeFromCart } = useAppContext();
+
+  const itemCount = cartItems?.[product._id] || 0;
 
   return (
     product && (
       <div
         onClick={() => {
-          navigate(`/product/${product.category.toLowerCase()}/${product._id}`)
+          navigate(`/product/${product.category.toLowerCase()}/${product._id}`);
         }}
-        className="border border-gray-500/20 rounded-md md:px-4 px-3 py-2 bg-white min-w-56 max-w-56 w-full mb-10 cursor-pointer"
+        className="border border-gray-500/20 rounded-md px-4 py-3 bg-white 
+             w-full sm:w-56 md:w-56 mb-10 cursor-pointer 
+             hover:shadow-md transition"
       >
         {/* Image */}
-        <div className="group flex items-center justify-center px-2">
+        <div className="group flex items-center justify-center px-2 h-40 overflow-hidden">
           <img
-            className="group-hover:scale-105 transition max-w-26 md:max-w-36"
-            src={product.image[0]}
+            className="group-hover:scale-105 transition duration-300 object-contain h-full"
+            src={`http://localhost:3000/images/${product.image[0]}`}
             alt={product.name}
           />
         </div>
 
         {/* Details */}
-        <div className="text-gray-500/60 text-sm">
-          <p>{product.category}</p>
+        <div className="text-gray-500/60 text-sm mt-2">
+          <p className="capitalize">{product.category}</p>
 
-          <p className="text-gray-700 font-medium text-lg truncate w-full">
+          <p className="text-gray-700 font-medium text-lg truncate">
             {product.name}
           </p>
 
           {/* Stars */}
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-0.5 mt-1">
             {Array(5)
               .fill("")
               .map((_, i) => (
@@ -42,28 +46,29 @@ const ProductCard = ({ product }) => {
                   className="w-3 md:w-3.5"
                 />
               ))}
-            <p>(4)</p>
+            <p className="ml-1">(4)</p>
           </div>
 
           {/* Price + Add to cart */}
-          <div className="flex items-end justify-between mt-3">
+          <div className="flex items-center justify-between mt-3">
             <p className="md:text-xl text-base font-medium text-indigo-500">
               ${product.offerPrice}
-              <span className="text-gray-500/60 md:text-sm text-xs line-through ml-1">
+              <span className="text-gray-500/60 text-xs md:text-sm line-through ml-1">
                 ${product.price}
               </span>
             </p>
 
             {/* Add / Counter */}
             <div className="text-indigo-500">
-              {!cartItems[product._id] ? (
-                // ADD BUTTON
+              {!itemCount ? (
                 <button
                   onClick={(e) => {
-                    e.stopPropagation()
-                    addToCart(product._id)
+                    e.stopPropagation();
+                    addToCart(product._id);
                   }}
-                  className="flex items-center justify-center gap-1 bg-indigo-100 border border-indigo-300 md:w-[80px] w-[64px] h-[34px] rounded text-indigo-600 font-medium"
+                  className="flex items-center justify-center gap-1 bg-indigo-100 
+           border border-indigo-300 w-[70px] h-[34px] rounded 
+           text-indigo-600 font-medium"
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path
@@ -76,31 +81,29 @@ const ProductCard = ({ product }) => {
                   Add
                 </button>
               ) : (
-                // COUNTER
                 <div
-                  className="flex items-center justify-center gap-2 md:w-20 w-16 h-[34px] bg-indigo-500/25 rounded select-none"
+                  className="flex items-center justify-center gap-2 w-20 h-[34px] 
+           bg-indigo-500/25 rounded select-none"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
                     onClick={(e) => {
-                      e.stopPropagation()
-                      removeFromCart(product._id)
+                      e.stopPropagation();
+                      removeFromCart(product._id);
                     }}
-                    className="cursor-pointer text-md px-2 h-full"
+                    className="cursor-pointer text-md px-2"
                   >
                     -
                   </button>
 
-                  <span className="w-5 text-center">
-                    {cartItems[product._id]}
-                  </span>
+                  <span className="w-5 text-center">{itemCount}</span>
 
                   <button
                     onClick={(e) => {
-                      e.stopPropagation()
-                      addToCart(product._id)
+                      e.stopPropagation();
+                      addToCart(product._id);
                     }}
-                    className="cursor-pointer text-md px-2 h-full"
+                    className="cursor-pointer text-md px-2"
                   >
                     +
                   </button>
@@ -111,7 +114,7 @@ const ProductCard = ({ product }) => {
         </div>
       </div>
     )
-  )
-}
+  );
+};
 
-export default ProductCard
+export default ProductCard;

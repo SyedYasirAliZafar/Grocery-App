@@ -1,35 +1,19 @@
-import { User } from '../models/user.model.js';
+// Example backend route
+import { User } from "../models/user.model.js";
 
 export const updateCart = async (req, res) => {
-    try {
-        const userId = req.user;
-        const { cartItems } = req.body;
+  try {
+    const userId = req.user; // this must be string ID
+    const { cartItems } = req.body;
 
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { cartData: cartItems },
-            { new: true }
-        );
-
-        // ❌ If user not found
-        if (!updatedUser) {
-            return res.status(404).json({
-                message: "User not found",
-                success: false
-            });
-        }
-
-        // ✅ User found → send success response
-        return res.status(200).json({
-            updatedUser,
-            success: true,
-            message: "Cart Updated Successfully"
-        });
-
-    } catch (error) {
-        return res.status(500).json({
-            message: "Server Error",
-            error: error.message
-        });
+    if (!cartItems || typeof cartItems !== "object") {
+      return res.status(400).json({ message: "Invalid cart data" });
     }
+
+    await User.findByIdAndUpdate(userId, { cartItems });
+    res.status(200).json({ success: true, message: "Cart updated" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
+
